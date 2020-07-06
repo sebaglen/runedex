@@ -58,4 +58,26 @@ public interface RuneDexPluginConfiguration extends Config
     {
         return SoundEffectVolume.MEDIUM_HIGH;
     }
+
+    @ConfigItem(
+            position = 1,
+            keyName = "shareLevels",
+            name = "Share your levels with RuneDex",
+            description = "Share levels with RuneDex"
+    )
+    default boolean shareLevels()
+    {
+        return true;
+    }
+
+    @ConfigItem(
+            position = 2,
+            keyName = "shareBank",
+            name = "Share your bank with RuneDex",
+            description = "Share bank with RuneDex"
+    )
+    default boolean shareBank()
+    {
+        return false;
+    }
 }

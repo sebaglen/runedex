@@ -6,5 +6,5 @@ import lombok.AllArgsConstructor;
 @Data
 @AllArgsConstructor
 public class CharacterModel {
-    private final int testInt;
+    private int combatLevel;
 }

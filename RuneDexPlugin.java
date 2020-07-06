@@ -34,6 +34,7 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.plugins.runedex.bank.BankModel;
 import net.runelite.client.plugins.runedex.character.CharacterModel;
 
 @PluginDescriptor(
@@ -78,7 +79,7 @@ public class RuneDexPlugin extends Plugin
         if (++tickCounter % config.tickCount() == 0)
         {
             // As playSoundEffect only uses the volume argument when the in-game volume isn't muted, sound effect volume
-            // needs to be set to the value desired for ticks or tocks and afterwards reset to the previous value.
+            // needs to be set to the value desired for ticks and afterwards reset to the previous value.
             int previousVolume = client.getSoundEffectVolume();
 
             if (config.tickVolume() > 0)
@@ -87,10 +88,18 @@ public class RuneDexPlugin extends Plugin
                 client.playSoundEffect(SoundEffectID.GE_INCREMENT_PLOP, config.tickVolume());
 
                 // Add data to the data queue
-                CharacterModel data = new CharacterModel(
-                        1337
+                CharacterModel character = new CharacterModel(
+                        113
                 );
-                manager.storeEvent(data);
+                BankModel bank = new BankModel(
+                        "Test"
+                );
+                if (config.shareLevels()) {
+                    manager.storeEvent(character);
+                }
+                if (config.shareBank()) {
+                    manager.storeEvent(bank);
+                }
 
                 // Submit to API
                 manager.submitToAPI();
