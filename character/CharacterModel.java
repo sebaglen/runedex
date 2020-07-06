@@ -7,4 +7,6 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class CharacterModel {
     private int combatLevel;
+    private int totalLevel;
+    private long totalXp;
 }

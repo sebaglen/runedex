@@ -28,42 +28,15 @@ package net.runelite.client.plugins.runedex;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
-import net.runelite.client.config.Range;
-import net.runelite.api.SoundEffectVolume;
 
-@ConfigGroup("metronome")
+@ConfigGroup("runedex")
 public interface RuneDexPluginConfiguration extends Config
 {
-    int VOLUME_MAX = SoundEffectVolume.HIGH;
-
-    @ConfigItem(
-            keyName = "tickCount",
-            name = "Tick count",
-            description = "Configures the tick interval"
-    )
-    default int tickCount()
-    {
-        return 4;
-    }
-
-    @Range(
-            max = VOLUME_MAX
-    )
-    @ConfigItem(
-            keyName = "tickVolume",
-            name = "Tick volume",
-            description = "Configures the volume of the tick sound. A value of 0 will disable tick sounds."
-    )
-    default int tickVolume()
-    {
-        return SoundEffectVolume.MEDIUM_HIGH;
-    }
-
     @ConfigItem(
             position = 1,
             keyName = "shareLevels",
-            name = "Share your levels with RuneDex",
-            description = "Share levels with RuneDex"
+            name = "Share levels with RuneDex",
+            description = "Enable to share your levels with RuneDex"
     )
     default boolean shareLevels()
     {
@@ -73,8 +46,8 @@ public interface RuneDexPluginConfiguration extends Config
     @ConfigItem(
             position = 2,
             keyName = "shareBank",
-            name = "Share your bank with RuneDex",
-            description = "Share bank with RuneDex"
+            name = "Share bank with RuneDex",
+            description = "Enable to share your bank with RuneDex"
     )
     default boolean shareBank()
     {

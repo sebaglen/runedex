@@ -37,6 +37,9 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.runedex.bank.BankModel;
 import net.runelite.client.plugins.runedex.character.CharacterModel;
 
+import net.runelite.client.task.Schedule;
+import java.time.temporal.ChronoUnit;
+
 @PluginDescriptor(
         name = "RuneDex",
         description = "Enjoy your personal OSRS status interface",
@@ -45,6 +48,8 @@ import net.runelite.client.plugins.runedex.character.CharacterModel;
 )
 public class RuneDexPlugin extends Plugin
 {
+    private static final int SECONDS_BETWEEN_UPLOADS = 10;
+
     @Inject
     private Client client;
 
@@ -54,59 +59,34 @@ public class RuneDexPlugin extends Plugin
     @Inject
     private RuneDexPluginConfiguration config;
 
-    private int tickCounter = 0;
-
     @Provides
     RuneDexPluginConfiguration provideConfig(ConfigManager configManager)
     {
         return configManager.getConfig(RuneDexPluginConfiguration.class);
     }
 
-    @Override
-    protected void shutDown()
+    @Schedule(
+            period = SECONDS_BETWEEN_UPLOADS,
+            unit = ChronoUnit.SECONDS,
+            asynchronous = true
+    )
+    public void submitToAPI()
     {
-        tickCounter = 0;
-    }
-
-    @Subscribe
-    public void onGameTick(GameTick tick)
-    {
-        if (config.tickCount() == 0)
-        {
-            return;
+        CharacterModel character = new CharacterModel(
+                113,
+                client.getTotalLevel(),
+                client.getOverallExperience()
+        );
+        BankModel bank = new BankModel(
+                "Test"
+        );
+        if (config.shareLevels()) {
+            manager.storeEvent(character);
         }
-
-        if (++tickCounter % config.tickCount() == 0)
-        {
-            // As playSoundEffect only uses the volume argument when the in-game volume isn't muted, sound effect volume
-            // needs to be set to the value desired for ticks and afterwards reset to the previous value.
-            int previousVolume = client.getSoundEffectVolume();
-
-            if (config.tickVolume() > 0)
-            {
-                client.setSoundEffectVolume(config.tickVolume());
-                client.playSoundEffect(SoundEffectID.GE_INCREMENT_PLOP, config.tickVolume());
-
-                // Add data to the data queue
-                CharacterModel character = new CharacterModel(
-                        113
-                );
-                BankModel bank = new BankModel(
-                        "Test"
-                );
-                if (config.shareLevels()) {
-                    manager.storeEvent(character);
-                }
-                if (config.shareBank()) {
-                    manager.storeEvent(bank);
-                }
-
-                // Submit to API
-                manager.submitToAPI();
-            }
-
-            client.setSoundEffectVolume(previousVolume);
+        if (config.shareBank()) {
+            manager.storeEvent(bank);
         }
+        manager.submitToAPI();
     }
 
 }
