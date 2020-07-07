@@ -25,6 +25,7 @@
 
 package net.runelite.client.plugins.runedex;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.HashMap;
@@ -32,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.client.plugins.runedex.user.User;
+import net.runelite.api.Client;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -51,7 +52,9 @@ public class APIManager
             .pingInterval(30, TimeUnit.SECONDS)
             .build();
 
-    private User user;
+    @Inject
+    private Client client;
+
     private HashMap<String, Object> data = new HashMap<>();
 
     public void storeEvent(String eventType, Object event)
@@ -60,10 +63,6 @@ public class APIManager
             data.remove(eventType);
         }
         data.put(eventType, event);
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     protected void submitToAPI(RuneDexPluginConfiguration config)
@@ -75,13 +74,13 @@ public class APIManager
             data.remove("bank");
         }
 
-        if (data.isEmpty() /* || this.user == null */)
+        if (data.isEmpty() || client.getUsername() == null)
         {
             log.info("No data to Submit");
             return;
         }
 
-        data.put("userId", this.user);
+        this.storeEvent("userId", client.getUsername());
 
         Request r = new Request.Builder()
                 .url(API_BARE_URL)

@@ -33,7 +33,6 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.plugins.runedex.bank.BankModel;
 import net.runelite.client.plugins.runedex.character.CharacterModel;
-import net.runelite.client.plugins.runedex.user.UserModel;
 import net.runelite.client.task.Schedule;
 import java.time.temporal.ChronoUnit;
 
@@ -66,9 +65,6 @@ public class RuneDexPlugin extends Plugin
 
     // Import models
     @Inject
-    private UserModel user;
-
-    @Inject
     private BankModel bank;
 
     @Inject
@@ -78,7 +74,6 @@ public class RuneDexPlugin extends Plugin
     @Override
     protected void startUp() throws Exception
     {
-        eventBus.register(user);
         eventBus.register(bank);
         eventBus.register(character);
     }
@@ -86,7 +81,6 @@ public class RuneDexPlugin extends Plugin
     @Override
     protected void shutDown() throws Exception
     {
-        eventBus.unregister(user);
         eventBus.unregister(bank);
         eventBus.unregister(character);
     }
