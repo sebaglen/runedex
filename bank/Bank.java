@@ -6,5 +6,5 @@ import lombok.AllArgsConstructor;
 @Data
 @AllArgsConstructor
 public class Bank {
-    private String bankTest;
+    private long bankValue;
 }
