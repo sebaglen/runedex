@@ -54,6 +54,9 @@ public class APIManager
 
     public void storeEvent(String eventType, Object event)
     {
+        if (data.get(eventType) != null) {
+            data.remove(eventType);
+        }
         data.put(eventType, event);
     }
 
