@@ -28,7 +28,6 @@ package net.runelite.client.plugins.runedex;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import com.google.gson.Gson;
