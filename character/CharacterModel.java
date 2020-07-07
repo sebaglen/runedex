@@ -70,6 +70,7 @@ public class CharacterModel {
                 client.getTotalLevel(),
                 client.getLocalPlayer().getCombatLevel()
         );
+
         manager.storeEvent("character", character);
     }
 }

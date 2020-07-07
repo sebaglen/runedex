@@ -93,6 +93,6 @@ public class RuneDexPlugin extends Plugin
     )
     public void submitToAPI()
     {
-        manager.submitToAPI();
+        manager.submitToAPI(config);
     }
 }

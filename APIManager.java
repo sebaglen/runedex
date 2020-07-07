@@ -28,6 +28,7 @@ package net.runelite.client.plugins.runedex;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import com.google.gson.Gson;
@@ -60,8 +61,15 @@ public class APIManager
         data.put(eventType, event);
     }
 
-    protected void submitToAPI()
+    protected void submitToAPI(RuneDexPluginConfiguration config)
     {
+        if (config.shareLevels() == false) {
+            data.remove("character");
+        }
+        if (config.shareBank() == false) {
+            data.remove("bank");
+        }
+
         if (data.isEmpty())
         {
             log.info("No data to Submit");
