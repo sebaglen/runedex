@@ -50,6 +50,7 @@ public class APIManager
             .pingInterval(30, TimeUnit.SECONDS)
             .build();
 
+    private Object user;
     private HashMap<String, Object> data = new HashMap<>();
 
     public void storeEvent(String eventType, Object event)
@@ -58,6 +59,10 @@ public class APIManager
             data.remove(eventType);
         }
         data.put(eventType, event);
+    }
+
+    public void setUser(Object user) {
+        this.user = user;
     }
 
     protected void submitToAPI(RuneDexPluginConfiguration config)
@@ -69,11 +74,13 @@ public class APIManager
             data.remove("bank");
         }
 
-        if (data.isEmpty())
+        if (data.isEmpty() || this.user == null)
         {
             log.info("No data to Submit");
             return;
         }
+
+        data.put("userId", this.user);
 
         Request r = new Request.Builder()
                 .url(API_BARE_URL)
