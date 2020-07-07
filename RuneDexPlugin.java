@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2018, SomeoneWithAnInternetConnection
- * Copyright (c) 2018, oplosthee <https://github.com/oplosthee>
+ * Copyright (c) 2018, Sebastian Aglen Danielsen <https://github.com/sebaglen>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,15 +26,9 @@ package net.runelite.client.plugins.runedex;
 
 import com.google.inject.Provides;
 import javax.inject.Inject;
-import net.runelite.api.Client;
-import net.runelite.api.SoundEffectID;
-import net.runelite.api.events.GameTick;
 import net.runelite.client.config.ConfigManager;
-import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
-import net.runelite.client.plugins.runedex.bank.BankModel;
-import net.runelite.client.plugins.runedex.character.CharacterModel;
 
 import net.runelite.client.task.Schedule;
 import java.time.temporal.ChronoUnit;
@@ -49,9 +42,7 @@ import java.time.temporal.ChronoUnit;
 public class RuneDexPlugin extends Plugin
 {
     private static final int SECONDS_BETWEEN_UPLOADS = 10;
-
-    @Inject
-    private Client client;
+    private UserData user = new UserData();
 
     @Inject
     APIManager manager;
@@ -72,21 +63,6 @@ public class RuneDexPlugin extends Plugin
     )
     public void submitToAPI()
     {
-        CharacterModel character = new CharacterModel(
-                113,
-                client.getTotalLevel(),
-                client.getOverallExperience()
-        );
-        BankModel bank = new BankModel(
-                "Test"
-        );
-        if (config.shareLevels()) {
-            manager.storeEvent(character);
-        }
-        if (config.shareBank()) {
-            manager.storeEvent(bank);
-        }
-        manager.submitToAPI();
+        manager.submitToAPI(user.getUserData());
     }
-
 }

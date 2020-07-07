@@ -22,17 +22,26 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.client.plugins.runedex.bank;
+package net.runelite.client.plugins.runedex;
 
 import com.google.inject.Provides;
 import lombok.Data;
+import net.runelite.api.Client;
 import net.runelite.client.config.ConfigManager;
-import net.runelite.client.plugins.runedex.RuneDexPluginConfiguration;
+import net.runelite.client.plugins.runedex.bank.BankModel;
+import net.runelite.client.plugins.runedex.character.CharacterModel;
 
 import javax.inject.Inject;
+import java.util.HashMap;
+
 
 @Data
-public class BankModel {
+public class UserData {
+    @Inject
+    private Client client;
+
+    @Inject
+    APIManager manager;
 
     @Inject
     private RuneDexPluginConfiguration config;
@@ -43,16 +52,14 @@ public class BankModel {
         return configManager.getConfig(RuneDexPluginConfiguration.class);
     }
 
-    private boolean consentFlag;
-    private String bankTest;
+    private HashMap<String, Object> data = new HashMap<String, Object>();
 
-    public BankModel() {
-        this.bankTest = "Memes123";
-        this.consentFlag = config.shareLevels();
-    }
+    private CharacterModel character = new CharacterModel();
+    private BankModel bank = new BankModel();
+    data.put("Character", character);
+    data.put("Bank", bank);
 
-    public boolean getConsentFlag() {
-        return this.consentFlag;
+    public HashMap<String, Object> getUserData() {
+        return data;
     }
 }
-
