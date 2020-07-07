@@ -24,10 +24,10 @@
  */
 package net.runelite.client.plugins.runedex.bank;
 
-import com.google.inject.Provides;
 import lombok.Data;
-import net.runelite.client.config.ConfigManager;
-import net.runelite.client.plugins.runedex.RuneDexPluginConfiguration;
+import net.runelite.api.events.GameTick;
+import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.plugins.runedex.APIManager;
 
 import javax.inject.Inject;
 
@@ -35,24 +35,14 @@ import javax.inject.Inject;
 public class BankModel {
 
     @Inject
-    private RuneDexPluginConfiguration config;
-
-    @Provides
-    RuneDexPluginConfiguration provideConfig(ConfigManager configManager)
+    private APIManager manager;
+    /*
+    @Subscribe
+    public void onGameTick(GameTick event)
     {
-        return configManager.getConfig(RuneDexPluginConfiguration.class);
+        Bank bank = new Bank("Bank object test string");
+        manager.storeEvent(bank);
     }
-
-    private boolean consentFlag;
-    private String bankTest;
-
-    public BankModel() {
-        this.bankTest = "Memes123";
-        this.consentFlag = config.shareLevels();
-    }
-
-    public boolean getConsentFlag() {
-        return this.consentFlag;
-    }
+     */
 }
 

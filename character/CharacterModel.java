@@ -24,11 +24,12 @@
  */
 package net.runelite.client.plugins.runedex.character;
 
-import com.google.inject.Provides;
 import lombok.Data;
 import net.runelite.api.Client;
-import net.runelite.client.config.ConfigManager;
-import net.runelite.client.plugins.runedex.RuneDexPluginConfiguration;
+import net.runelite.api.Skill;
+import net.runelite.api.events.StatChanged;
+import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.plugins.runedex.APIManager;
 
 import javax.inject.Inject;
 
@@ -38,27 +39,37 @@ public class CharacterModel {
     private Client client;
 
     @Inject
-    private RuneDexPluginConfiguration config;
+    private APIManager manager;
 
-    @Provides
-    RuneDexPluginConfiguration provideConfig(ConfigManager configManager)
+    @Subscribe
+    public void onStatChanged(StatChanged statChanged)
     {
-        return configManager.getConfig(RuneDexPluginConfiguration.class);
-    }
-
-    private boolean consentFlag;
-    private int combatLevel;
-    private int totalLevel;
-    private long totalXp;
-
-    public CharacterModel() {
-        this.combatLevel = client.getLocalPlayer().getCombatLevel();
-        this.totalLevel = client.getTotalLevel();
-        this.totalXp = client.getOverallExperience();
-        this.consentFlag = config.shareLevels();
-    }
-
-    public boolean getConsentFlag() {
-        return this.consentFlag;
+        Character character = new Character(
+                client.getSkillExperience(Skill.ATTACK),
+                client.getSkillExperience(Skill.STRENGTH),
+                client.getSkillExperience(Skill.DEFENCE),
+                client.getSkillExperience(Skill.RANGED),
+                client.getSkillExperience(Skill.PRAYER),
+                client.getSkillExperience(Skill.MAGIC),
+                client.getSkillExperience(Skill.RUNECRAFT),
+                client.getSkillExperience(Skill.HITPOINTS),
+                client.getSkillExperience(Skill.AGILITY),
+                client.getSkillExperience(Skill.HERBLORE),
+                client.getSkillExperience(Skill.THIEVING),
+                client.getSkillExperience(Skill.CRAFTING),
+                client.getSkillExperience(Skill.FLETCHING),
+                client.getSkillExperience(Skill.SLAYER),
+                client.getSkillExperience(Skill.HUNTER),
+                client.getSkillExperience(Skill.MINING),
+                client.getSkillExperience(Skill.SMITHING),
+                client.getSkillExperience(Skill.FISHING),
+                client.getSkillExperience(Skill.COOKING),
+                client.getSkillExperience(Skill.FIREMAKING),
+                client.getSkillExperience(Skill.FARMING),
+                client.getOverallExperience(),
+                client.getTotalLevel(),
+                client.getLocalPlayer().getCombatLevel()
+        );
+        manager.storeEvent(character);
     }
 }

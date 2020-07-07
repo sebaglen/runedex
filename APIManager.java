@@ -28,7 +28,6 @@ package net.runelite.client.plugins.runedex;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -52,7 +51,14 @@ public class APIManager
             .pingInterval(30, TimeUnit.SECONDS)
             .build();
 
-    protected void submitToAPI(HashMap<String, Object> data)
+    private List<Object> data = new ArrayList<>();
+
+    public void storeEvent(Object event)
+    {
+        data.add(event);
+    }
+
+    protected void submitToAPI()
     {
         if (data.isEmpty())
         {

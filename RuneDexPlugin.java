@@ -30,6 +30,9 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 
+import net.runelite.client.eventbus.EventBus;
+import net.runelite.client.plugins.runedex.bank.BankModel;
+import net.runelite.client.plugins.runedex.character.CharacterModel;
 import net.runelite.client.task.Schedule;
 import java.time.temporal.ChronoUnit;
 
@@ -39,14 +42,12 @@ import java.time.temporal.ChronoUnit;
         tags = {"helper", "notification"},
         enabledByDefault = false
 )
+
 public class RuneDexPlugin extends Plugin
 {
     private static final int SECONDS_BETWEEN_UPLOADS = 10;
-    private UserData user = new UserData();
 
-    @Inject
-    APIManager manager;
-
+    // Import plugin configuration
     @Inject
     private RuneDexPluginConfiguration config;
 
@@ -56,6 +57,35 @@ public class RuneDexPlugin extends Plugin
         return configManager.getConfig(RuneDexPluginConfiguration.class);
     }
 
+    @Inject
+    private EventBus eventBus;
+
+    @Inject
+    APIManager manager;
+
+    // Import models
+    @Inject
+    private BankModel bank;
+
+    @Inject
+    private CharacterModel character;
+
+
+    @Override
+    protected void startUp() throws Exception
+    {
+        eventBus.register(bank);
+        eventBus.register(character);
+    }
+
+    @Override
+    protected void shutDown() throws Exception
+    {
+        eventBus.unregister(bank);
+        eventBus.unregister(character);
+    }
+
+    // Schedule API POST request
     @Schedule(
             period = SECONDS_BETWEEN_UPLOADS,
             unit = ChronoUnit.SECONDS,
@@ -63,6 +93,6 @@ public class RuneDexPlugin extends Plugin
     )
     public void submitToAPI()
     {
-        manager.submitToAPI(user.getUserData());
+        manager.submitToAPI();
     }
 }
