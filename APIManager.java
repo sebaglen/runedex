@@ -32,6 +32,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.client.plugins.runedex.user.User;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -50,7 +51,7 @@ public class APIManager
             .pingInterval(30, TimeUnit.SECONDS)
             .build();
 
-    private Object user;
+    private User user;
     private HashMap<String, Object> data = new HashMap<>();
 
     public void storeEvent(String eventType, Object event)
@@ -61,7 +62,7 @@ public class APIManager
         data.put(eventType, event);
     }
 
-    public void setUser(Object user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
@@ -74,7 +75,7 @@ public class APIManager
             data.remove("bank");
         }
 
-        if (data.isEmpty() || this.user == null)
+        if (data.isEmpty() /* || this.user == null */)
         {
             log.info("No data to Submit");
             return;

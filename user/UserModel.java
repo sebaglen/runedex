@@ -36,6 +36,8 @@ import javax.inject.Inject;
 @Data
 public class UserModel {
 
+    private static User user;
+
     @Inject
     private Client client;
 
@@ -47,11 +49,8 @@ public class UserModel {
     {
         if (event.getGameState() == GameState.LOGGED_IN)
         {
-            User user = new User(client.getUsername());
-            manager.setUser(user);
-        }
-        else {
-            manager.setUser(null);
+            this.user = new User(client.getUsername());
+            manager.setUser(this.user);
         }
     }
 }
