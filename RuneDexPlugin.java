@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2018, SomeoneWithAnInternetConnection
- * Copyright (c) 2018, oplosthee <https://github.com/oplosthee>
+ * Copyright (c) 2018, Sebastian Aglen Danielsen <https://github.com/sebaglen>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,16 +26,13 @@ package net.runelite.client.plugins.runedex;
 
 import com.google.inject.Provides;
 import javax.inject.Inject;
-import net.runelite.api.Client;
-import net.runelite.api.SoundEffectID;
-import net.runelite.api.events.GameTick;
 import net.runelite.client.config.ConfigManager;
-import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+
+import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.plugins.runedex.bank.BankModel;
 import net.runelite.client.plugins.runedex.character.CharacterModel;
-
 import net.runelite.client.task.Schedule;
 import java.time.temporal.ChronoUnit;
 
@@ -46,16 +42,12 @@ import java.time.temporal.ChronoUnit;
         tags = {"helper", "notification"},
         enabledByDefault = false
 )
+
 public class RuneDexPlugin extends Plugin
 {
     private static final int SECONDS_BETWEEN_UPLOADS = 10;
 
-    @Inject
-    private Client client;
-
-    @Inject
-    APIManager manager;
-
+    // Import plugin configuration
     @Inject
     private RuneDexPluginConfiguration config;
 
@@ -65,6 +57,35 @@ public class RuneDexPlugin extends Plugin
         return configManager.getConfig(RuneDexPluginConfiguration.class);
     }
 
+    @Inject
+    private EventBus eventBus;
+
+    @Inject
+    APIManager manager;
+
+    // Import models
+    @Inject
+    private BankModel bank;
+
+    @Inject
+    private CharacterModel character;
+
+
+    @Override
+    protected void startUp() throws Exception
+    {
+        eventBus.register(bank);
+        eventBus.register(character);
+    }
+
+    @Override
+    protected void shutDown() throws Exception
+    {
+        eventBus.unregister(bank);
+        eventBus.unregister(character);
+    }
+
+    // Schedule API POST request
     @Schedule(
             period = SECONDS_BETWEEN_UPLOADS,
             unit = ChronoUnit.SECONDS,
@@ -72,21 +93,6 @@ public class RuneDexPlugin extends Plugin
     )
     public void submitToAPI()
     {
-        CharacterModel character = new CharacterModel(
-                113,
-                client.getTotalLevel(),
-                client.getOverallExperience()
-        );
-        BankModel bank = new BankModel(
-                "Test"
-        );
-        if (config.shareLevels()) {
-            manager.storeEvent(character);
-        }
-        if (config.shareBank()) {
-            manager.storeEvent(bank);
-        }
         manager.submitToAPI();
     }
-
 }

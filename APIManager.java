@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Weird Gloop <admin@weirdgloop.org>
+ * Copyright (c) 2018, Sebastian Aglen Danielsen <https://github.com/sebaglen>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,8 +27,7 @@ package net.runelite.client.plugins.runedex;
 
 import javax.inject.Singleton;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import com.google.gson.Gson;
@@ -44,18 +43,18 @@ import okhttp3.Response;
 public class APIManager
 {
 
-    private static final String API_BARE_URL = "https://5f031e414c6a2b001648fd8f.mockapi.io/runedex/tick";
+    private static final String API_BARE_URL = "https://us-central1-runedex-77a4c.cloudfunctions.net/addUserData";
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private static final Gson GSON = new Gson();
     private static final OkHttpClient CLIENT = new OkHttpClient.Builder()
             .pingInterval(30, TimeUnit.SECONDS)
             .build();
 
-    private List<Object> data = new ArrayList<>();
+    private HashMap<String, Object> data = new HashMap<>();
 
-    public void storeEvent(Object event)
+    public void storeEvent(String eventType, Object event)
     {
-        data.add(event);
+        data.put(eventType, event);
     }
 
     protected void submitToAPI()
@@ -68,7 +67,7 @@ public class APIManager
 
         Request r = new Request.Builder()
                 .url(API_BARE_URL)
-                .post(RequestBody.create(JSON, GSON.toJson(this.data)))
+                .post(RequestBody.create(JSON, GSON.toJson(data)))
                 .build();
 
         data.clear();
@@ -81,13 +80,13 @@ public class APIManager
             }
             else
             {
-                log.debug("Error sending data");
-                log.debug(response.body().toString());
+                log.info("Error sending data");
+                log.info(response.body().toString());
             }
         }
         catch (IOException e)
         {
-            log.debug("IOException: {}", e.getMessage());
+            log.info("IOException: {}", e.getMessage());
         }
     }
 }
