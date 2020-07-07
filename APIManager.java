@@ -27,8 +27,7 @@ package net.runelite.client.plugins.runedex;
 
 import javax.inject.Singleton;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import com.google.gson.Gson;
@@ -51,11 +50,11 @@ public class APIManager
             .pingInterval(30, TimeUnit.SECONDS)
             .build();
 
-    private List<Object> data = new ArrayList<>();
+    private HashMap<String, Object> data = new HashMap<>();
 
-    public void storeEvent(Object event)
+    public void storeEvent(String eventType, Object event)
     {
-        data.add(event);
+        data.put(eventType, event);
     }
 
     protected void submitToAPI()

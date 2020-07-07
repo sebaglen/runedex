@@ -41,7 +41,7 @@ public class BankModel {
     public void onGameTick(GameTick event)
     {
         Bank bank = new Bank("Bank object test string");
-        manager.storeEvent(bank);
+        manager.storeEvent("bank", bank);
     }
      */
 }
