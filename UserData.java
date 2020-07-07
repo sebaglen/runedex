@@ -52,12 +52,15 @@ public class UserData {
         return configManager.getConfig(RuneDexPluginConfiguration.class);
     }
 
-    private HashMap<String, Object> data = new HashMap<String, Object>();
+    private HashMap <String, Object> data = new HashMap();
 
     private CharacterModel character = new CharacterModel();
     private BankModel bank = new BankModel();
-    data.put("Character", character);
-    data.put("Bank", bank);
+
+    public UserData() {
+        data.put("Character", character);
+        data.put("Bank", bank);
+    }
 
     public HashMap<String, Object> getUserData() {
         return data;
