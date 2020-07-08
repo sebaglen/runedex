@@ -90,7 +90,7 @@ public class BankModel {
                     id,
                     qty,
                     (getTotalItemValueByIdAndQuantity(id, qty) / qty),
-                    "ItemName") // check out ItemID in the runelite api, get key of id value
+                    client.getItemDefinition(id).getName()) // check out ItemID in the runelite api, get key of id value
             );
         }
 
