@@ -51,13 +51,14 @@ public class BankModel {
     public void onScriptCallbackEvent(ScriptCallbackEvent event)
     {
         if (event.getEventName().equals("setBankTitle")) {
-            final BankValue prices = calculate(getBankTabItems());
-            if (prices == null)
+            final Item[] bankItems = getBankTabItems();
+            final long prices = calculate(bankItems);
+            if (prices == 0)
             {
                 return;
             }
 
-            Bank bank = new Bank(prices.getPrice());
+            Bank bank = new Bank(prices, bankItems);
             manager.storeEvent("bank", bank);
         }
     }
@@ -74,12 +75,11 @@ public class BankModel {
         return items;
     }
 
-    @Nullable
-    BankValue calculate(@Nullable Item[] items)
+    long calculate(@Nullable Item[] items)
     {
         if (items == null)
         {
-            return null;
+            return 0;
         }
 
         long ge = 0;
@@ -108,7 +108,7 @@ public class BankModel {
             }
         }
 
-        return new BankValue(ge);
+        return ge;
     }
 }
 
