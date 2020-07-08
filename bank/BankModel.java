@@ -34,6 +34,7 @@ import net.runelite.client.plugins.runedex.APIManager;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import java.util.ArrayList;
 
 @Data
 public class BankModel {
@@ -51,13 +52,11 @@ public class BankModel {
     public void onScriptCallbackEvent(ScriptCallbackEvent event)
     {
         if (event.getEventName().equals("setBankTitle")) {
-            final BankValue prices = calculate(getBankTabItems());
-            if (prices == null)
-            {
-                return;
-            }
+            final Item[] bankItems = getBankTabItems();
+            final long totalGePrice = getTotalGePrice(bankItems);
+            final ArrayList<Object> bankItemList = formatBankItems(bankItems);
 
-            Bank bank = new Bank(prices.getPrice());
+            Bank bank = new Bank(totalGePrice, bankItemList);
             manager.storeEvent("bank", bank);
         }
     }
@@ -74,12 +73,35 @@ public class BankModel {
         return items;
     }
 
-    @Nullable
-    BankValue calculate(@Nullable Item[] items)
+    private ArrayList<Object> formatBankItems(Item[] bankItems) {
+
+        ArrayList<Object> build = new ArrayList<>();
+
+        for (final Item item : bankItems)
+        {
+            final int qty = item.getQuantity();
+            final int id = item.getId();
+
+            if (id <= 0 || qty == 0)
+            {
+                continue;
+            }
+            build.add(new BankItem(
+                    id,
+                    qty,
+                    (getTotalItemValueByIdAndQuantity(id, qty) / qty),
+                    client.getItemDefinition(id).getName()) // check out ItemID in the runelite api, get key of id value
+            );
+        }
+
+        return build;
+    }
+
+    long getTotalGePrice(@Nullable Item[] items)
     {
         if (items == null)
         {
-            return null;
+            return 0;
         }
 
         long ge = 0;
@@ -94,21 +116,22 @@ public class BankModel {
                 continue;
             }
 
-            switch (id)
-            {
-                case ItemID.COINS_995:
-                    ge += qty;
-                    break;
-                case ItemID.PLATINUM_TOKEN:
-                    ge += qty * 1000L;
-                    break;
-                default:
-                    ge += (long) itemManager.getItemPrice(id) * qty;
-                    break;
-            }
+            ge += getTotalItemValueByIdAndQuantity(id, qty);
         }
 
-        return new BankValue(ge);
+        return ge;
+    }
+
+    long getTotalItemValueByIdAndQuantity(int id, int qty) {
+        switch (id)
+        {
+            case ItemID.COINS_995:
+                return qty;
+            case ItemID.PLATINUM_TOKEN:
+                return qty * 1000L;
+            default:
+                return (long) itemManager.getItemPrice(id) * qty;
+        }
     }
 }
 
