@@ -86,7 +86,7 @@ public class APIManager
 
         Request r = new Request.Builder()
                 .url(API_BARE_URL)
-                .header("authorization", this.authenticationController.getAuth(config))
+                .header("authorization", this.authenticationController.getAuth(client.getUsername(), config.pin()))
                 .post(RequestBody.create(JSON, GSON.toJson(data)))
                 .build();
 

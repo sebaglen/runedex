@@ -29,19 +29,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.math.BigInteger;
 
-import net.runelite.api.Client;
-import javax.inject.Inject;
-
-
 public class AuthenticationController
 {
-    @Inject
-    private Client client;
 
-    protected String getAuth(RuneDexPluginConfiguration config)
+    protected String getAuth(String userName, String pin)
     {
-        String userName = client.getUsername();
-        String pin = config.pin();
         String saltedAuthenticationCode = "";
 
         try {
