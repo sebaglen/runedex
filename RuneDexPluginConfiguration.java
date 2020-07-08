@@ -27,6 +27,7 @@ package net.runelite.client.plugins.runedex;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
+import net.runelite.client.config.Keybind;
 
 @ConfigGroup("runedex")
 public interface RuneDexPluginConfiguration extends Config
@@ -51,5 +52,16 @@ public interface RuneDexPluginConfiguration extends Config
     default boolean shareBank()
     {
         return false;
+    }
+
+    @ConfigItem(
+            position = 3,
+            keyName = "PIN",
+            name = "Pin code",
+            description = "4-digit pin code"
+    )
+    default String pin()
+    {
+        return "";
     }
 }

@@ -52,6 +52,8 @@ public class APIManager
             .pingInterval(30, TimeUnit.SECONDS)
             .build();
 
+    private AuthenticationController authenticationController = new AuthenticationController();
+
     @Inject
     private Client client;
 
@@ -84,6 +86,7 @@ public class APIManager
 
         Request r = new Request.Builder()
                 .url(API_BARE_URL)
+                .header("authorization", this.authenticationController.getAuth(config))
                 .post(RequestBody.create(JSON, GSON.toJson(data)))
                 .build();
 
