@@ -2,7 +2,6 @@ package net.runelite.client.plugins.runedex.bank;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import net.runelite.api.Item;
 
 @Data
 @AllArgsConstructor
