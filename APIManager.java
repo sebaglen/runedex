@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Sebastian Aglen Danielsen <https://github.com/sebaglen>
+ * Copyright (c) 2020, Sebastian Aglen Danielsen <https://github.com/sebaglen>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -75,6 +75,9 @@ public class APIManager
         if (config.shareBank() == false) {
             data.remove("bank");
         }
+        if (config.shareQuests() == false) {
+            data.remove("quests");
+        }
 
         if (data.isEmpty() || client.getUsername() == null)
         {
@@ -83,6 +86,8 @@ public class APIManager
         }
 
         this.storeEvent("userId", client.getUsername());
+
+        this.storeEvent("permissions", new Permissions(config.shareLevels(), config.shareBank(), config.shareQuests()));
 
         Request r = new Request.Builder()
                 .url(API_BARE_URL)

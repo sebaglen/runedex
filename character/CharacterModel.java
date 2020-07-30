@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Sebastian Aglen Danielsen <https://github.com/sebaglen>
+ * Copyright (c) 2020, Sebastian Aglen Danielsen <https://github.com/sebaglen>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,6 +22,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package net.runelite.client.plugins.runedex.character;
 
 import lombok.Data;

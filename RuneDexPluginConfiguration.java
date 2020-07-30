@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Sebastian Aglen Danielsen <https://github.com/sebaglen>
+ * Copyright (c) 2020, Sebastian Aglen Danielsen <https://github.com/sebaglen>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,6 +22,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package net.runelite.client.plugins.runedex;
 
 import net.runelite.client.config.Config;
@@ -45,6 +46,20 @@ public interface RuneDexPluginConfiguration extends Config
 
     @ConfigItem(
             position = 2,
+            keyName = "shareQuests",
+            name = "Share quests with RuneDex",
+            description = "Enable to share your quests with RuneDex"
+    )
+    default boolean shareQuests()
+    {
+        return true;
+    }
+
+    // Sharing of player wealth data is disabled by default for privacy reasons.
+    // This has to be enabled manually if the user wish to send the state of their bank
+    // to RuneDex. This must be done if the user wishes to use the RuneDex bank value change notifier.
+    @ConfigItem(
+            position = 3,
             keyName = "shareBank",
             name = "Share bank with RuneDex",
             description = "Enable to share your bank with RuneDex"
@@ -55,7 +70,7 @@ public interface RuneDexPluginConfiguration extends Config
     }
 
     @ConfigItem(
-            position = 3,
+            position = 4,
             keyName = "PIN",
             name = "Pin code",
             description = "4-digit pin code"

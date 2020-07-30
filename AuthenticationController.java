@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Sebastian Aglen Danielsen <https://github.com/sebaglen>
+ * Copyright (c) 2020, Sebastian Aglen Danielsen <https://github.com/sebaglen>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
